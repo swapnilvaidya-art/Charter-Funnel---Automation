@@ -131,7 +131,21 @@ else:
     print(f"📊 Rows fetched: {len(df)}")
     df = sanitize_df(df)
 
+    required_cols = [
+        'prospect_id', 'prospect_email', 'charter', 'lead_created_on',
+        'assignment_month', 'assigned_date', 'last_activity_date', 'assignment_tag',
+        'true_churn_tag', 'dialed', 'connected', 'prospect', 'test_taken',
+        'test_cleared', 'session_done', 'rejected', 'latest_stage', 'rfd'
+    ]
+
+    missing_cols = [col for col in required_cols if col not in df.columns]
+    if missing_cols:
+        raise ValueError(f"❌ Missing columns from query: {missing_cols}")
+
+    df = df[required_cols]
+
     print("🔗 Connecting to Google Sheets...")
+
     sheet = gc.open_by_key(SAK)
     ws = sheet.worksheet("CM Dump")
 
